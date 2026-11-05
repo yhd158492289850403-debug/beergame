@@ -1,0 +1,11 @@
+PASS | 协议为 file: | file:
+PASS | game-logic.js 在 file:// 下加载成功
+PASS | game.js 在 file:// 下加载成功
+PASS | 设置界面渲染完成（4 个角色选项） | count=4
+PASS | styles.css 在 file:// 下生效（设计变量可解析） | canvas=#fafaf9 accent=#303732
+PASS | file:// 下可完整玩完一局 | period=37
+PASS | file:// 下结算界面正常显示
+PASS | 无任何远程 http(s) 资源请求（完全离线） | 0 个远程请求
+PASS | 运行期间无未捕获异常
+---
+FAILURES=0

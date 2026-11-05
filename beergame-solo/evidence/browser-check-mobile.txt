@@ -1,0 +1,9 @@
+PASS | 窄屏无整页横向溢出 | docWidth=414 viewport=414
+PASS | 窄屏全景图文字可读 | effective=9.3px scale=0.85
+PASS | 窄屏全景图可横向滚动 | 380 -> 1032
+PASS | 窄屏区块可见 #gameScreen | w=382 h=1940
+PASS | 窄屏区块可见 .board-wrap | w=382 h=531
+PASS | 窄屏区块可见 .control-card | w=382 h=706
+PASS | 窄屏区块可见 .info-card | w=382 h=565
+---
+FAILURES=0

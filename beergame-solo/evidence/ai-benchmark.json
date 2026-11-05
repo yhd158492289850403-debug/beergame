@@ -1,0 +1,256 @@
+{
+  "periods": 36,
+  "playerRole": "none",
+  "comparisons": {
+    "hardBeatsNormal": 36,
+    "total": 36
+  },
+  "byMode": [
+    {
+      "demandMode": "stable",
+      "averageCost": {
+        "easy": 690,
+        "normal": 374,
+        "hard": 303
+      },
+      "runs": [
+        {
+          "seed": 7,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 11,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 13,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 19,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 22,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 29,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 33,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 41,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 44,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 55,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 57,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        },
+        {
+          "seed": 71,
+          "easy": 689.5,
+          "normal": 373.5,
+          "hard": 303
+        }
+      ]
+    },
+    {
+      "demandMode": "step",
+      "averageCost": {
+        "easy": 5920,
+        "normal": 1096,
+        "hard": 717
+      },
+      "runs": [
+        {
+          "seed": 7,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 11,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 13,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 19,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 22,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 29,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 33,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 41,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 44,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 55,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 57,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        },
+        {
+          "seed": 71,
+          "easy": 5919.5,
+          "normal": 1096,
+          "hard": 716.5
+        }
+      ]
+    },
+    {
+      "demandMode": "random",
+      "averageCost": {
+        "easy": 6289,
+        "normal": 1686,
+        "hard": 1306
+      },
+      "runs": [
+        {
+          "seed": 7,
+          "easy": 7661.5,
+          "normal": 1408.5,
+          "hard": 951
+        },
+        {
+          "seed": 11,
+          "easy": 6662,
+          "normal": 1890.5,
+          "hard": 1239
+        },
+        {
+          "seed": 13,
+          "easy": 5417.5,
+          "normal": 991.5,
+          "hard": 866.5
+        },
+        {
+          "seed": 19,
+          "easy": 3947,
+          "normal": 1234.5,
+          "hard": 1007.5
+        },
+        {
+          "seed": 22,
+          "easy": 5222,
+          "normal": 1150.5,
+          "hard": 972.5
+        },
+        {
+          "seed": 29,
+          "easy": 6401.5,
+          "normal": 2429,
+          "hard": 1865.5
+        },
+        {
+          "seed": 33,
+          "easy": 6154.5,
+          "normal": 2228,
+          "hard": 1738
+        },
+        {
+          "seed": 41,
+          "easy": 6853.5,
+          "normal": 2366,
+          "hard": 1822.5
+        },
+        {
+          "seed": 44,
+          "easy": 5964,
+          "normal": 1057.5,
+          "hard": 905.5
+        },
+        {
+          "seed": 55,
+          "easy": 8896,
+          "normal": 1359,
+          "hard": 1098
+        },
+        {
+          "seed": 57,
+          "easy": 6575.5,
+          "normal": 1792.5,
+          "hard": 1423.5
+        },
+        {
+          "seed": 71,
+          "easy": 5711,
+          "normal": 2326.5,
+          "hard": 1778.5
+        }
+      ]
+    }
+  ]
+}

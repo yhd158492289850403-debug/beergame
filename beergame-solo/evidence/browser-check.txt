@@ -1,0 +1,89 @@
+PASS | 页面标记 data-app-ready
+PASS | 设置区存在且可见
+PASS | 游戏区初始隐藏
+PASS | 结算区初始隐藏
+PASS | 顶部数据条在设置页真正隐藏（hidden 未被 CSS 覆盖） | computed display=none
+PASS | 四个角色选项 | count=4
+PASS | 三个机器人档位
+PASS | 三个周期选项
+PASS | 三个需求模式
+PASS | 初始库存滑块存在
+PASS | 初始在途滑块存在
+PASS | 额外延迟开关存在
+PASS | “显示其他节点库存”开关存在且默认开启
+PASS | 需求参数区默认渲染 3 项（阶梯增长） | params=3
+PASS | draft.periods = 18 | =18
+PASS | draft.botLevel = hard | =hard
+PASS | draft.playerRole = factory | =factory
+PASS | 切到随机波动后参数区为 4 项（起始/下限/上限/波动幅度） | params=4 ids=dp_demandStart,dp_demandMin,dp_demandMax,dp_demandVolatility
+PASS | 随机模式参数包含 demandVolatility
+PASS | 切回阶梯增长后参数区为 3 项 | params=3
+PASS | 初始库存滑块写入 draft = 20 | =20
+PASS | 开局后生成 state
+PASS | 游戏区显示、设置区隐藏
+PASS | state.period 从 1 开始 | =1
+PASS | 配置生效：18 周期 / 工厂 / 困难
+PASS | 初始库存 20 已生效 | =20
+PASS | SVG 渲染 4 个角色节点
+PASS | 我的角色高亮唯一
+PASS | 运输通道已渲染 | lines=7
+PASS | 信息面板 5 行（4 角色 + 顾客）
+PASS | 顶部周期显示 1/18 | 1/18
+PASS | 成本趋势图已绘制
+PASS | 成本趋势图为简洁折线（无渐变面积层）
+PASS | 4 个节点都有在途管道读数
+PASS | 全景图不含背景网格（简约风格）
+PASS | 全景图文字实际渲染字号 >= 8px（可读） | declared=11px scale=0.99 effective=10.9px
+PASS | 字号不足时提供横向滚动兜底 | effective=10.9px canScroll=false
+PASS | 全景图内文本无互相压叠（最终布局） | 25 段文本互不重叠
+PASS | autoPlay 跑到结束
+PASS | 历史长度等于周期数 18 | history=18
+PASS | 累计成本随对局增长 | before=0 after=425
+PASS | 结算区可见
+PASS | 游戏区已隐藏
+PASS | 结算指标 5 项
+PASS | 结算表 4 行
+PASS | 结算摘要含周期数 18 | 你扮演工厂，共 18 个周期。你的累计成本为 158，整条供应链总成本为 425。
+PASS | 再玩一局：回到设置界面
+PASS | 再玩后 state 已清空
+PASS | 开关开启时：自己的库存为数字
+PASS | 开关开启时：其他节点库存也是数字
+PASS | 开关开启时：不显示隐藏提示
+PASS | 关闭后 draft 记录为 false
+PASS | 关闭后对局配置记录为 false
+PASS | 关闭后显示隐藏提示
+PASS | 关闭后：自己的库存仍为数字 | 我的库存=20
+PASS | 关闭后：自己的在途仍为数字 | 我的在途=8
+PASS | 关闭后：自己的累计成本仍为数字 | 我的成本=0
+PASS | 关闭后：其他节点的库存/缺货/在途全部打码 | [["零售商","—","—","—"],["批发商","—","—","—"],["分销商","—","—","—"]]
+PASS | 关闭后：其他节点仍显示累计成本（不属于库存情况） | ["0","0","0"]
+PASS | 关闭后：看板中自己的库存仍为数字 | 20
+PASS | 关闭后：看板中其他节点的库存打码
+PASS | 关闭后：看板中其他节点的在途管道打码
+PASS | 关闭后：看板中其他节点的成本仍可见
+PASS | 关闭后：运输动画确实播放过（取样非空，排除空洞通过） | samples=129
+PASS | 关闭后：运输动画不显示件数（不泄漏在途数量） | samples=129 非空=[]
+PASS | 恢复开启后再次显示其他节点库存
+PASS | 第二次开局 period = 1
+PASS | 第二次开局结算区隐藏
+PASS | 第二次开局顶部数据条可见
+INFO | confirm 已启动: animating=true
+INFO | 采样迭代=91 采样次数=92 订单元素累计命中=168 卡车样本=44 订单样本=64
+PASS | 动画期间出现订单卡元素
+PASS | 卡车位置随帧推进（动画真实移动） | samples=44 first=610 last=830
+PASS | 同一张订单卡向上游移动（x 递减） | trackedSamples=8 first=174.1 last=170
+PASS | 动画期间确认按钮被禁用（输入锁定）
+PASS | 动画期间出现卡车元素
+PASS | 动画结束后解除锁定
+PASS | 动画结束后运动元素被清理
+PASS | 动画后周期推进到 2 | period=2
+PASS | 玩家订单 7 被如实采纳 | order=7
+PASS | 带动画连续 3 回合后 period = 5 | period=5
+PASS | 历史累积 4 条记录 | history=4
+PASS | 控制区需求数字已刷新为纯数字 | 0
+PASS | 信息面板仍为 5 行
+PASS | 从第 5 周期带动画打到结束 | period=19
+PASS | 总历史长度 = 18 | history=18
+PASS | 结束时结算区可见
+---
+FAILURES=0

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>啤酒游戏 · 单人 / 联机</title>
+<meta name="description" content="在一条四级供应链中练习库存与订货决策，观察需求延迟如何形成牛鞭效应。离线可玩。" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到游戏内容</a>
+<main class="app" id="main">
+
+  <!-- ================= 顶部标题栏 ================= -->
+  <header class="app-header">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 8h9v9a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V8Z" />
+        <path d="M15 10h1.5a2.5 2.5 0 0 1 0 5H15" />
+        <path d="M6 8V5.5A1.5 1.5 0 0 1 7.5 4h6A1.5 1.5 0 0 1 15 5.5V8" />
+        <path d="M8.5 2v2M11.5 2v2" />
+      </svg>
+      <div>
+        <h1>啤酒游戏</h1>
+        <p class="brand-sub">BEER GAME / 供应链决策实验</p>
+      </div>
+    </div>
+    <div id="headerStats" class="header-stats" hidden>
+      <div class="stat"><span class="stat-label">周期</span><span class="stat-value" id="statPeriod">1/36</span></div>
+      <div class="stat"><span class="stat-label">我的库存</span><span class="stat-value" id="statInventory">0</span></div>
+      <div class="stat"><span class="stat-label">缺货</span><span class="stat-value" id="statBacklog">0</span></div>
+      <div class="stat"><span class="stat-label">我的成本</span><span class="stat-value" id="statCost">0</span></div>
+      <div class="stat"><span class="stat-label">供应链总成本</span><span class="stat-value" id="statTotalCost">0</span></div>    </div>
+  </header>
+
+  <div class="music-controls"><button id="tutorialOpen" class="btn">新手教程 · 2 分钟</button><button id="musicToggle" class="btn btn-subtle" aria-pressed="false">背景音乐：关</button><label for="musicVolume" class="music-volume">音量<input id="musicVolume" type="range" min="0" max="100" value="25" /></label></div>
+  <section class="online-panel" aria-labelledby="onlineTitle">
+    <h2 id="onlineTitle">和朋友一起经营</h2>
+    <p>先在下方选择你的角色。最多四人参与，每人负责一站，空位由 AI 补齐。</p>
+    <div id="roomActions" class="online-actions"><button id="roomCreate" class="btn">创建房间</button><label for="roomCode">房间码</label><input id="roomCode" maxlength="6" placeholder="六位房间码" autocomplete="off" /><button id="roomJoin" class="btn">加入房间</button></div>
+    <p id="onlineStatus" role="status" aria-live="polite">单人直接开始，联机请创建或加入房间。创建时使用下方的开局设置。</p>
+    <button id="roomStart" class="btn btn-primary" hidden>开始联机对局</button>
+    <button id="roomLeave" class="btn btn-subtle" hidden>离开房间</button>
+  </section>
+  <!-- ================= 设置区 ================= -->
+  <section id="setupScreen" class="screen setup-screen">
+    <div class="setup-intro">
+      <div><p class="eyebrow">四个节点，一个共同目标</p><h2>少一点库存。<br />多一点判断。</h2></div>
+      <div class="intro-copy"><p>你负责一站，AI 接力其余三站。用每周的订货决策，让啤酒流向顾客，也让整条供应链的成本降下来。</p><div class="rule-strip"><span>01 观察需求</span><span>02 决定订货</span><span>03 等待补货</span></div><p class="intro-note">每箱每周：库存成本 0.5 · 缺货成本 1.0<br />货物运输需 2 周，订单传递默认需 1 周。</p></div>
+    </div>
+    <div class="setup-card">
+      <h2 class="setup-title">开局设置</h2>
+      <p class="setup-sub">先选你的角色与 AI 伙伴，再设定这一局的市场。</p>
+
+      <div class="setup-grid">
+
+        <fieldset class="field-group">
+          <legend>玩家角色</legend>
+          <div class="choice-row" id="roleChoices" role="radiogroup" aria-label="玩家角色"></div>
+          <p class="field-hint">你将扮演这个角色亲自下单，其余角色由机器人控制。</p>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>AI 伙伴策略</legend>
+          <div class="choice-row" id="botChoices" role="radiogroup" aria-label="机器人智能度"></div>
+          <p class="field-hint" id="botHint">普通：平滑预测需求，并计入运输在途与尚未发货的订单。</p>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>游戏周期数</legend>
+          <div class="choice-row" id="periodChoices" role="radiogroup" aria-label="游戏周期数"></div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend>需求模式</legend>
+          <div class="choice-row" id="demandChoices" role="radiogroup" aria-label="需求模式"></div>
+          <div id="demandParams" class="param-row"></div>
+        </fieldset>
+
+        <fieldset class="field-group field-group-wide">
+          <legend>初始库存与在途订单（所有角色相同）</legend>
+          <div class="slider-row">
+            <label for="inputInitialInventory">初始库存</label>
+            <input type="range" id="inputInitialInventory" min="0" max="30" step="1" value="12" />
+            <output id="outInitialInventory">12</output>
+          </div>
+          <div class="slider-row">
+            <label for="inputInitialPipeline">初始在途订单</label>
+            <input type="range" id="inputInitialPipeline" min="0" max="20" step="1" value="4" />
+            <output id="outInitialPipeline">4</output>
+          </div>
+          <p class="field-hint">在途订单分两段：近段本周结算到货，远段下周结算到货。</p>
+        </fieldset>
+
+        <details class="field-group field-group-wide advanced-options">
+          <summary>进阶设置 <span>信息隔离、订单延迟与随机种子</span></summary>
+          <label class="switch-row">
+            <input type="checkbox" id="inputExtraDelay" />
+            <span>订单额外延迟一周期送达上游（更难）</span>
+          </label>
+          <label class="switch-row">
+            <input type="checkbox" id="inputShowOtherInventory" checked />
+            <span>显示其他节点的库存情况（库存 / 缺货 / 在途）</span>
+          </label>
+          <p class="field-hint checkbox-note">
+            关闭后其他节点显示为“—”，你只能看到自己的库存、缺货与在途，
+            更接近真实啤酒游戏的信息隔离体验。你自己的数据始终可见。
+          </p>
+          <div class="param-row">
+            <label for="inputSeed">随机种子</label>
+            <input type="number" id="inputSeed" value="20240517" />
+            <span class="field-hint">相同种子会得到完全相同的对局。</span>
+          </div>
+        </details>
+
+      </div>
+
+      <div class="setup-actions">
+        <button id="btnStart" class="btn btn-primary btn-lg">开始游戏</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 游戏主界面 ================= -->
+  <section id="gameScreen" class="screen game-screen" hidden>
+
+    <div class="game-toolbar"><p id="sessionLabel"></p><button class="btn btn-subtle" id="btnGameSetup">结束本局 · 返回设置</button></div>
+    <div class="week-progress" role="progressbar" aria-label="对局进度" aria-valuemin="0" id="weekProgress"><span id="weekProgressFill"></span></div>
+    <!-- 供应链主视图 -->
+    <div class="board-wrap">
+      <div class="board-head">
+        <h2>供应链全景</h2>
+        <div class="legend">
+          <span class="legend-item"><i class="dot dot-order"></i>订单上行</span>
+          <span class="legend-item"><i class="dot dot-ship"></i>货物下行</span>
+          <span class="legend-item"><i class="dot dot-me"></i>我的角色</span>
+        </div>
+      </div>
+
+      <div class="board-scroll">
+        <svg id="supplySvg" class="supply-svg" viewBox="0 0 1180 460"
+             role="img" aria-label="供应链布局图：顾客 → 零售商 → 批发商 → 分销商 → 工厂">
+        <defs>
+          <!-- 简约风格：只保留必要的平色与箭头，不使用渐变/阴影 -->
+          <marker id="arrowUp" viewBox="0 0 10 10" refX="8" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#9aa1ad" />
+          </marker>
+          <marker id="arrowDown" viewBox="0 0 10 10" refX="8" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#9aa1ad" />
+          </marker>
+        </defs>
+
+        <!-- 运输通道背景（由 JS 填充节点） -->
+        <g id="laneLayer"></g>
+        <!-- 节点（角色 / 库存 / 数据） -->
+        <g id="nodeLayer"></g>
+        <!-- 动画层（卡车 / 订单卡） -->
+        <g id="motionLayer"></g>
+      </svg>
+      </div>
+
+      <p class="board-note">
+        顾客需求只直接作用于零售商；下游的订单沿链路上传，货物沿链路下发。
+      </p>
+      <p class="board-note board-note-masked" id="maskedNotice" hidden>
+        其他节点的库存情况已隐藏：仅显示你自己的库存、缺货与在途。可在开局设置中重新开启。
+      </p>
+    </div>
+
+    <!-- 控制区 -->
+    <div class="control-wrap">
+      <div class="control-card">
+        <div class="control-head">
+          <h3 id="controlTitle">第 1 周期 · 请下单</h3>
+          <span class="turn-badge" id="turnBadge">进行中</span>
+        </div>
+
+        <div class="demand-panel">
+          <div class="demand-item">
+            <span class="demand-label">你本周面对的需求</span>
+            <span class="demand-value" id="demandValue">4</span>
+          </div>
+          <div class="demand-item">
+            <span class="demand-label">你的库存</span>
+            <span class="demand-value" id="myInventory">12</span>
+          </div>
+          <div class="demand-item">
+            <span class="demand-label">你的在途</span>
+            <span class="demand-value" id="myPipeline">8</span>
+          </div>
+          <div class="demand-item">
+            <span class="demand-label">你的缺货</span>
+            <span class="demand-value danger" id="myBacklog">0</span>
+          </div>
+        </div>
+
+        <details class="advisor" open>
+          <summary>订货参考 <span id="adviceOrder"></span></summary>
+          <p id="adviceText"></p>
+          <div class="advisor-facts" id="adviceFacts"></div>
+          <button type="button" class="btn btn-subtle" id="btnUseAdvice">填入建议量</button>
+          <p class="advisor-note">只参考你已看到的需求；建议不保证最优。</p>
+        </details>
+        <div class="order-entry">
+          <label for="orderInput" class="order-label">本周订货量</label>
+          <div class="order-controls">
+            <button type="button" class="btn btn-step" id="btnMinus" aria-label="减少订单">−</button>
+            <input type="number" id="orderInput" min="0" max="200" step="1" value="4" />
+            <button type="button" class="btn btn-step" id="btnPlus" aria-label="增加订单">+</button>
+          </div>
+          <div class="quick-row" id="quickOrders"></div>
+        </div>
+
+        <button id="btnConfirm" class="btn btn-primary btn-lg">确认订单</button>
+        <p class="control-hint" id="controlHint">订单需传递到上游，再等待两周运输。</p>
+      </div>
+
+      <!-- 信息面板 -->
+      <div class="info-card">
+        <h3>各节点实时状态</h3>
+        <div class="table-scroll"><table class="info-table">
+          <thead>
+            <tr>
+              <th>节点</th><th>库存</th><th>缺货</th><th>在途</th><th>本周期需求</th><th>累计成本</th>
+            </tr>
+          </thead>
+          <tbody id="infoBody"></tbody>
+        </table></div>
+
+        <h3 class="mt">成本趋势</h3>
+        <svg id="costChart" class="mini-chart" viewBox="0 0 320 120" role="img" aria-label="累计成本趋势图"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 结算界面 ================= -->
+  <section id="resultScreen" class="screen result-screen" hidden>
+    <div class="result-card">
+      <h2>对局结束</h2>
+      <p class="result-summary" id="resultSummary"></p>
+      <div class="result-metrics" id="resultMetrics"></div>
+      <h3>各角色成本分解</h3>
+      <div class="table-scroll"><table class="info-table">
+        <thead>
+          <tr><th>角色</th><th>累计成本</th><th>库存成本</th><th>缺货成本</th><th>期末库存</th><th>期末缺货</th></tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table></div>
+      <p class="review-note" id="reviewNote"></p>
+      <div class="result-actions">
+        <button id="btnExport" class="btn">导出逐周记录</button>
+        <button id="btnAgain" class="btn btn-primary">再玩一局</button>
+        <button id="btnBackToSetup" class="btn btn-subtle">返回设置</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    <span>Beer Game Solo · 每一次下单，都会传向更远的地方。</span>
+  </footer>
+
+</main>
+
+<dialog id="tutorialDialog" class="tutorial-dialog" aria-labelledby="tutorialTitle" aria-describedby="tutorialNote">
+  <div class="tutorial-top"><span id="tutorialProgress" class="eyebrow"></span><button id="tutorialClose" class="btn btn-subtle" type="button">关闭教程</button></div>
+  <p id="tutorialNote" class="tutorial-note">独立练习，不会改动你的对局。联机房间仍会正常同步。</p>
+  <h2 id="tutorialTitle" tabindex="-1"></h2>
+  <div id="tutorialContent" class="tutorial-content"></div>
+  <div class="tutorial-navigation"><button id="tutorialPrevious" class="btn" type="button">上一步</button><button id="tutorialNext" class="btn btn-primary" type="button">下一步</button></div>
+</dialog>
+
+<!-- 逻辑层（浏览器直接以 file:// 打开也可运行：不使用 ES module） -->
+<script src="src/game-logic.js"></script>
+<script src="src/game.js"></script>
+<script src="src/online.js"></script>
+<script src="src/music.js"></script>
+<script src="src/tutorial.js"></script>
+</body>
+</html>
+
